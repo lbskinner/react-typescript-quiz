@@ -1,21 +1,45 @@
 import React, { useState } from "react";
 import { fetchQuizQuestions } from "./API";
 import QuestionCard from "./components/QuestionsCard";
-import { Difficulty } from "./API";
+import { QuestionState, Difficulty } from "./API";
+
+type AnswerObject = {
+  question: string;
+  answer: string; // userAnswer
+  correct: boolean;
+  correctAnswer: string;
+};
 
 const TOTAL_QUESTIONS = 10;
 
 function App() {
   const [loading, setLoading] = useState(false);
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<QuestionState[]>([]);
   const [number, setNumber] = useState(0);
-  const [userAnswers, setUserAnswers] = useState([]);
+  const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
 
-  console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY));
+  console.log(questions);
 
-  const startTrivia = async () => {};
+  const startTrivia = async () => {
+    setLoading(true);
+    setGameOver(false);
+    try {
+      const newQuestions = await fetchQuizQuestions(
+        TOTAL_QUESTIONS,
+        Difficulty.EASY
+      );
+
+      setQuestions(newQuestions);
+      setScore(0);
+      setUserAnswers([]);
+      setNumber(0);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error getting quiz questions", error);
+    }
+  };
 
   // event is a mouse event and specify more that is is an HTMLButtonElement
   const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {};
