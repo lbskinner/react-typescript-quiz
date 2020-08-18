@@ -44,7 +44,24 @@ function App() {
   };
 
   // event is a mouse event and specify more that is is an HTMLButtonElement
-  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {};
+  const checkAnswer = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!gameOver) {
+      // get users answer
+      const answer = event.currentTarget.value;
+      // check answer against correct answer
+      const correct = questions[number].correct_answer === answer;
+      // add score if answer is correct
+      if (correct) setScore((prevState) => prevState + 1);
+      // save answer in the array for user answers
+      const answerObject = {
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answer,
+      };
+      setUserAnswers((prevState) => [...prevState, answerObject]);
+    }
+  };
 
   const nextQuestion = () => {};
 
@@ -68,9 +85,14 @@ function App() {
           callback={checkAnswer}
         />
       )}
-      <button className="next" onClick={nextQuestion}>
-        Next Question
-      </button>
+      {!gameOver &&
+      !loading &&
+      userAnswers.length === number + 1 &&
+      number !== TOTAL_QUESTIONS - 1 ? (
+        <button className="next" onClick={nextQuestion}>
+          Next Question
+        </button>
+      ) : null}
     </div>
   );
 }
