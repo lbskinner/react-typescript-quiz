@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { fetchQuizQuestions } from "./API";
 import QuestionCard from "./components/QuestionsCard";
-import { userInfo } from "os";
+import { Difficulty } from "./API";
 
 const TOTAL_QUESTIONS = 10;
 
@@ -11,6 +12,8 @@ function App() {
   const [userAnswers, setUserAnswers] = useState([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
+
+  console.log(fetchQuizQuestions(TOTAL_QUESTIONS, Difficulty.EASY));
 
   const startTrivia = async () => {};
 
